@@ -9,7 +9,6 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.provider.Contacts.Intents.Insert;
 
 public class CoolWeatherDB {
 	// 懒汉式单例模式，避免同时操作数据库
@@ -34,7 +33,7 @@ public class CoolWeatherDB {
 			ContentValues values = new ContentValues();
 			values.put("province_name", province.getProvinceName());
 			values.put("province_code", province.getProvinceCode());
-			db.insert("provice", null, values);
+			db.insert("Province", null, values);
 		}
 	}
 	//从数据库中读取Province数据
@@ -70,9 +69,10 @@ public class CoolWeatherDB {
 	}
 	
 	//从数据库中读取City数据
-	public List<City> loadCity() {
+	public List<City> loadCity(int provinceId) {
 		List<City> list = new ArrayList<City>();
-		Cursor cursor = db.query("City", null, null, null, null, null, null);
+		Cursor cursor = db.query("City", null, "province_id = ?", new String[]{ String.valueOf(provinceId)}, null, null, null);
+	
 		if (cursor.moveToFirst()) {
 			do {
 				City city = new City();
@@ -103,9 +103,9 @@ public class CoolWeatherDB {
 	
 	//从数据库中读取County数据
 	
-	public List<County> loadCounty() {
+	public List<County> loadCounty(int cityId) {
 		List<County> list = new ArrayList<County>();
-		Cursor cursor = db.query("County", null, null, null, null, null, null);
+		Cursor cursor = db.query("County", null, "citi_id = ?", new String[] {String.valueOf(cityId)}, null, null, null);
 		if (cursor.moveToFirst()) {
 			do {
 				County county = new County();
